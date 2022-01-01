@@ -8,31 +8,14 @@ import time
 import numpy as np
 import cv2
 
-wordl = []
-
-
-
-
-topnode = tu.words_to_tree("C:/Users/steve/Desktop/wordgame_nongit/Dictionaries/english_small.txt")
-
-wordlist = input("Enter letters: ")
-#wordlist = "abcdefghijklmnop"
-#wordlist = "ciolmhrfefednslo"
-#imagesShow = input("Show images? (T/F)")
-imagesShow = "T"
-imagesShow = (imagesShow=="T")
-#wordlist = "ttufpaepnerignss"
-bg = iu.create_imgs(wordlist)
-          
-
-arr = [[None]*4, [None]*4, [None]*4, [None]*4]
-def initArray():
+def initArray(wordlist):
     u = 0
+    arr = [[None]*4, [None]*4, [None]*4, [None]*4]
     for i in range(4):
         for z in range(4):
             arr[i][z]=wordlist[u:u+1]
             u+=1
-initArray()
+    return arr
 
 def minmax(num1, num2, moves):
     first = (not ((num1<0 or num1>3) or (num2<0 or num2>3)))
@@ -48,7 +31,7 @@ def possibleLetters(i, z, currentMoves):
             letterarray.append((i+move[0],z+move[1]))
     return letterarray
 
-def validWords(it, tn, accumlet, accum, i, z, moves, accumpos):
+def validWords(it, tn, accumlet, accum, i, z, moves, accumpos, arr):
     PL = possibleLetters(i,z, moves.copy())
     for nodes in tn.subnodes:
         lett = nodes.type
@@ -59,16 +42,16 @@ def validWords(it, tn, accumlet, accum, i, z, moves, accumpos):
                 tempmoves.append(let)
                 pos = let
                 if(len(lett)>1):
-                    pos = returnComb(lett, possibleLetters(let[0], let[1], tempmoves), 1, tempmoves)
+                    pos = returnComb(lett, possibleLetters(let[0], let[1], tempmoves), 1, tempmoves, arr)
                 if(pos[0]>-1 and pos[1]>-1):
                     if(nodes.isword):
                         accum.append(accumlet+lett)
                         if(len(accumlet+lett)>2):
                             accumpos.append((tempmoves, accumlet+lett))
-                    validWords(it-1, nodes, accumlet+lett, accum, pos[0], pos[1], tempmoves, accumpos)
+                    validWords(it-1, nodes, accumlet+lett, accum, pos[0], pos[1], tempmoves, accumpos, arr)
     return (accum, accumpos)
 
-def returnComb(word, PL, it, moves):
+def returnComb(word, PL, it, moves, arr):
     if(it>(len(word))):
         return (-1, -1)
     lett_to_find = word[it:it+1]
@@ -79,18 +62,21 @@ def returnComb(word, PL, it, moves):
             if(it==(len(word)-1)):
                 return let
             else:
-                return returnComb(word, possibleLetters(let[0], let[1], moves), it+1, moves)
+                return returnComb(word, possibleLetters(let[0], let[1], moves), it+1, moves, arr)
     return (-1, -1)
 def sortByLen(e):
     return len(e[1])
-def finalWords(radix, showImages):
+def finalWords(showImages, wordlist): #alphabet array
+    arr = initArray(wordlist)
+    if(showImages):
+        bg = iu.create_imgs(wordlist)
     words = []
     frames = []
     wordl = []
     for reps in range(16):
         i2 = int(reps % 4)
         z2 = int((reps - (reps % 4))/4)
-        (v, uv) = validWords(100, topnode, "", [], i2, z2, [], [])
+        (v, uv) = validWords(100, topnode, "", [], i2, z2, [], [], arr)
         for uvi in uv:
             if(showImages):
                 uvi[0].append((i2,z2))
@@ -123,13 +109,15 @@ def finalWords(radix, showImages):
     return otl
 
 
+topnode = tu.words_to_tree("C:/Users/steve/Desktop/wordgame_nongit/Dictionaries/english_small.txt")
+wordlist = "abcdefghijklmnop"
 triesize = str(tu.count_nodes(topnode))
 startTime = time.time()
-pw1 = finalWords(False, False)
+pw1 = finalWords(False, wordlist)
 endTime = time.time()
 topnode = ru.optimize_tree(topnode)
 st2 = time.time()
-pw2 = finalWords(True, True)
+pw2 = finalWords(True, wordlist)
 et2 = time.time()
 nodes2 = tu.count_nodes(topnode)
 ext1 = ((endTime-startTime)*1000)
