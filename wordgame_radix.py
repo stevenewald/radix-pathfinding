@@ -142,7 +142,7 @@ print("Tree Loaded")
 #wordlist = "abcdefghijklmnop"
 #wordlist = "ciolmhrfefednslo"
 #imagesShow = input("Show images? (T/F)")
-imagesShow = "T"
+imagesShow = "F"
 imagesShow = (imagesShow=="T")
 wordlist = "ttufpaepnerignss"
 bg = create_imgs(wordlist)
@@ -231,7 +231,7 @@ def validWords(it, tn, accumlet, accum, i, z, moves, accumpos):
                         accum.append(accumlet+lett)
                         if(len(accumlet+lett)>2):
                             accumpos.append((tempmoves, accumlet+lett))
-                    validWords(it-1, nodes, accumlet+lett, accum, let[0], let[1], tempmoves, accumpos)
+                    validWords(it-1, nodes, accumlet+lett, accum, pos[0], pos[1], tempmoves, accumpos)
     return (accum, accumpos)
 
 def returnComb(word, PL, it, moves):
