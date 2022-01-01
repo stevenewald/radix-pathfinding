@@ -140,7 +140,11 @@ print("Tree Loaded")
 
 #wordlist = input("Enter letters: ")
 #wordlist = "abcdefghijklmnop"
-wordlist = "ciolmhrfefednslo"
+#wordlist = "ciolmhrfefednslo"
+#imagesShow = input("Show images? (T/F)")
+imagesShow = "T"
+imagesShow = (imagesShow=="T")
+wordlist = "ttufpaepnerignss"
 bg = create_imgs(wordlist)
 
 
@@ -269,14 +273,10 @@ def finalWords(radix, export):
         frames.reverse()
         if(len(frames)>15):
             frames = frames[0:15]
-        for frame in frames:
-            cv2.imshow("t", frame[0])
-            cv2.waitKey(0)
-        #out = cv2.VideoWriter('C:/Users/steve/Desktop/test.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, (560, 560))
-        #out = cv2.VideoWriter('C:/Users/steve/Desktop/test.mp4',-1, 15, (560, 560))
-        #for frame in frames:
-            #out.write(frame[0])
-        #out.release()
+        if(imagesShow):
+            for frame in frames:
+                cv2.imshow("Word", frame[0])
+                cv2.waitKey(0)
     for i3 in range(len(words)):
         if(not(words[i3] in otl) and isinstance(words[i3], str)):
             otl.append(words[i3])
@@ -318,6 +318,7 @@ else:
     print("Decrease in execution time: -" + str(round(abs(timechange))/100) + "%")
 print("=========================")
 print(pw1)
+print(pw2)
 if(False): #only if testing words
     numvw = 0
     for word in dict:
@@ -334,3 +335,5 @@ if(False): #only if testing words
     print("Word check done")
 if(not(pw1==pw2)):
     print("ERROR: TRIE AND RADIX TREE UNEQUAL")
+    print(len(pw1))
+    print(len(pw2))

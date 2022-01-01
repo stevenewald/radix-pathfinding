@@ -293,6 +293,8 @@ def finalWords(radix, export):
         (v, uv) = validWords(100, topnode, "", [], i2, z2, [], [])
         xz = 0
         for uvi in uv:
+            if(len(bwl2)>27):
+                continue
             if((xz%100)==0):
                 print(reps)
             if(export):
