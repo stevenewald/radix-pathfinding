@@ -249,7 +249,7 @@ def returnComb(word, PL, it, moves):
     return (-1, -1)
 def sortByLen(e):
     return len(e[1])
-def finalWords(radix, export):
+def finalWords(radix):
     words = []
     frames = []
     wordl = []
@@ -258,7 +258,7 @@ def finalWords(radix, export):
         z2 = int((reps - (reps % 4))/4)
         (v, uv) = validWords(100, topnode, "", [], i2, z2, [], [])
         for uvi in uv:
-            if(export):
+            if(imagesShow):
                 uvi[0].append((i2,z2))
                 var = create_arrows(bg, uvi[0], uvi[1])
                 if(wordl.count(var[1])<1):
@@ -268,15 +268,14 @@ def finalWords(radix, export):
             words+=v
     otl = []
     k = 0
-    if(export):
+    if(imagesShow):
         frames.sort(key=sortByLen)
         frames.reverse()
         if(len(frames)>15):
             frames = frames[0:15]
-        if(imagesShow):
-            for frame in frames:
-                cv2.imshow("Word", frame[0])
-                cv2.waitKey(0)
+        for frame in frames:
+            cv2.imshow("Word", frame[0])
+            cv2.waitKey(0)
     for i3 in range(len(words)):
         if(not(words[i3] in otl) and isinstance(words[i3], str)):
             otl.append(words[i3])
@@ -292,12 +291,11 @@ def finalWords(radix, export):
 print("Performing tree operations\n")
 triesize = str(count_nodes(topnode))
 startTime = time.time()
-export_frames = False
-pw1 = finalWords(False, True)
+pw1 = finalWords(False)
 endTime = time.time()
 topnode = optimize_tree(topnode)
 st2 = time.time()
-pw2 = finalWords(True, export_frames)
+pw2 = finalWords(True)
 et2 = time.time()
 nodes2 = count_nodes(topnode)
 ext1 = ((endTime-startTime)*1000)
@@ -318,7 +316,6 @@ else:
     print("Decrease in execution time: -" + str(round(abs(timechange))/100) + "%")
 print("=========================")
 print(pw1)
-print(pw2)
 if(False): #only if testing words
     numvw = 0
     for word in dict:
