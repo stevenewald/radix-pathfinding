@@ -249,7 +249,7 @@ def returnComb(word, PL, it, moves):
     return (-1, -1)
 def sortByLen(e):
     return len(e[1])
-def finalWords(radix):
+def finalWords(radix, showImages):
     words = []
     frames = []
     wordl = []
@@ -258,7 +258,7 @@ def finalWords(radix):
         z2 = int((reps - (reps % 4))/4)
         (v, uv) = validWords(100, topnode, "", [], i2, z2, [], [])
         for uvi in uv:
-            if(imagesShow):
+            if(showImages):
                 uvi[0].append((i2,z2))
                 var = create_arrows(bg, uvi[0], uvi[1])
                 if(wordl.count(var[1])<1):
@@ -268,7 +268,7 @@ def finalWords(radix):
             words+=v
     otl = []
     k = 0
-    if(imagesShow):
+    if(showImages):
         frames.sort(key=sortByLen)
         frames.reverse()
         if(len(frames)>15):
@@ -291,11 +291,11 @@ def finalWords(radix):
 print("Performing tree operations\n")
 triesize = str(count_nodes(topnode))
 startTime = time.time()
-pw1 = finalWords(False)
+pw1 = finalWords(False, False)
 endTime = time.time()
 topnode = optimize_tree(topnode)
 st2 = time.time()
-pw2 = finalWords(True)
+pw2 = finalWords(True, True)
 et2 = time.time()
 nodes2 = count_nodes(topnode)
 ext1 = ((endTime-startTime)*1000)
