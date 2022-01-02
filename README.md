@@ -1,3 +1,3 @@
 # py-radix
 Python implementation of Radix Tree: memory and speed optimized language detection
-![Alt Text](https://media0.giphy.com/media/ZjR4BVsTYj7mtKG9Vf/giphy.gif?cid=790b76116f689b37f1de23eb657813e77889c39a66a5bd8b&rid=giphy.gif&ct=g)
+![Alt Text](https://media3.giphy.com/media/Kkbt8dpJvHkW4BG53d/giphy.gif?cid=790b76119076841af6bab0738019fa3f9e436810d48a2ce7&rid=giphy.gif&ct=g)
