@@ -1,12 +1,9 @@
-import image_utils as iu
-import tree_utils as tu
-import radix_utils as ru
-import wordcheck_utils as wordcheck #not used currently but useful
-import time
+from pyradix.image_utils import *
+from pyradix.tree_utils import *
+from pyradix.radix_utils import *
+from pyradix.wordcheck_utils import *
 #from english_words import english_words_lower_alpha_set
 #from threading import Thread
-import numpy as np
-import cv2
 
 def initArray(wordlist):
     u = 0
@@ -40,36 +37,37 @@ def validWords(it, tn, accumlet, accum, i, z, moves, accumpos, arr):
             if(lett[0:1]==lettF):
                 tempmoves = moves.copy()
                 tempmoves.append(let)
-                pos = let
+                posns = [let]
                 if(len(lett)>1):
-                    pos = returnComb(lett, possibleLetters(let[0], let[1], tempmoves), 1, tempmoves, arr)
-                if(pos[0]>-1 and pos[1]>-1):
-                    if(nodes.isword):
-                        accum.append(accumlet+lett)
-                        if(len(accumlet+lett)>2):
-                            accumpos.append((tempmoves, accumlet+lett))
-                    validWords(it-1, nodes, accumlet+lett, accum, pos[0], pos[1], tempmoves, accumpos, arr)
+                    posns = []
+                    returnComb(lett, possibleLetters(let[0], let[1], tempmoves), 1, tempmoves, arr, posns)
+                for pos in posns:
+                    if(pos[0]>-1 and pos[1]>-1):
+                        if(nodes.isword):
+                            accum.append(accumlet+lett)
+                            if(len(accumlet+lett)>2):
+                                accumpos.append((tempmoves, accumlet+lett))
+                        validWords(it-1, nodes, accumlet+lett, accum, pos[0], pos[1], tempmoves, accumpos, arr)
     return (accum, accumpos)
 
-def returnComb(word, PL, it, moves, arr):
+def returnComb(word, PL, it, moves, arr, posns):
     if(it>(len(word))):
-        return (-1, -1)
+        return
     lett_to_find = word[it:it+1]
     for let in PL:
         newL = arr[let[0]][let[1]]
         if(newL==lett_to_find):
             moves.append(let)
             if(it==(len(word)-1)):
-                return let
+                posns.append(let)
             else:
-                return returnComb(word, possibleLetters(let[0], let[1], moves), it+1, moves, arr)
-    return (-1, -1)
+                returnComb(word, possibleLetters(let[0], let[1], moves), it+1, moves, arr, posns)
 def sortByLen(e):
     return len(e[1])
-def finalWords(showImages, wordlist): #alphabet array
+def wordPathfinding(showImages, topnode, wordlist): #alphabet array
     arr = initArray(wordlist)
     if(showImages):
-        bg = iu.create_imgs(wordlist)
+        bg = create_imgs(wordlist)
     words = []
     frames = []
     wordl = []
@@ -80,7 +78,7 @@ def finalWords(showImages, wordlist): #alphabet array
         for uvi in uv:
             if(showImages):
                 uvi[0].append((i2,z2))
-                var = iu.create_arrows(bg, uvi[0], uvi[1])
+                var = create_arrows(bg, uvi[0], uvi[1])
                 if(wordl.count(var[1])<1):
                     frames.append((var[0], var[1]))
                 wordl.append(var[1])
@@ -103,7 +101,7 @@ def finalWords(showImages, wordlist): #alphabet array
             k+=1
     otl = np.unique(otl).tolist()
     otl.sort(key=len)
-    if(len(otl)>15): # reduce length of list
-        otl = otl[len(otl)-15:len(otl)]
+    #if(len(otl)>15): # reduce length of list
+        #otl = otl[len(otl)-15:len(otl)]
         
     return otl

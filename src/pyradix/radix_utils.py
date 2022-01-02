@@ -1,4 +1,4 @@
-import tree_utils as tu
+import pyradix.tree_utils as tu
 
 def optimize_tree(tree):
     anyReduxed = False

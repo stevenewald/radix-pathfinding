@@ -1,17 +1,25 @@
+import copy
 class node:
     def __init__(self, type, isword, subnodes):
         self.type = type
         self.subnodes = subnodes
         self.isword = isword
 
-def words_to_tree(file_location):
+    def copy(self):
+        copied = copy.deepcopy(self)
+        return copied
+
+def words_to_tree(dict):
     topnode = node(str,False,[])
-    dict = get_dict(file_location)
     for word in dict:
         if(word==""):
             continue
         topnode.subnodes = create_new_node(word, 1, topnode.subnodes)
     return topnode
+
+def add_word(topnode, word): #DOES NOT WORK WITH RADIX TREE
+    if(len(word)>0):
+        topnode.subnodes = create_new_node(word, 1, topnode.subnodes)
 
 def create_new_node(word, letters, subnodes):
     sub2 = find_index(subnodes,word, letters)
@@ -41,6 +49,7 @@ def get_dict(file_location):
     file = open(file_location, "r") #or use english3.txt for smaller dictionary
     content = file.read()
     dict = content.split("\n")
+    file.close()
     return dict
 
 def count_nodes(topnode):

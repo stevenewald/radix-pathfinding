@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 
-
 def create_arrows_sub(src2, moves2, word):
     frames = []
     currentImg = np.zeros((560, 560, 3), np.uint8)

@@ -1,47 +1,59 @@
-topnode = tu.words_to_tree("C:/Users/steve/Desktop/wordgame_nongit/Dictionaries/english_small.txt")
-wordlist = "abcdefghijklmnop"
-triesize = str(tu.count_nodes(topnode))
-startTime = time.time()
-pw1 = finalWords(False, wordlist)
-endTime = time.time()
-topnode = ru.optimize_tree(topnode)
-st2 = time.time()
-pw2 = finalWords(True, wordlist)
-et2 = time.time()
-nodes2 = tu.count_nodes(topnode)
-ext1 = ((endTime-startTime)*1000)
-ext2 = ((et2-st2)*1000)
-sizechange = abs(10000*(nodes2-int(triesize))/int(triesize))
-timechange = (10000*(ext2-ext1)/ext1)
-print("Trie vertices: " + triesize)
-print("Trie execution time: " + str(round(ext1)/1000) + " seconds")
-print("=========================")
-print("Radix tree vertices: " + str(nodes2))
-print("Radix tree execution time: " + str(round(ext2)/1000) + " seconds")
-print("=========================")
-print("Changes from implementing radix tree")
-print("Reduction in size: -" + str(round(sizechange)/100) + "%")
-if(timechange>0):
-    print("Increase in execution time: +" + str(round(abs(timechange))/100) + "%")
-else:
-    print("Decrease in execution time: -" + str(round(abs(timechange))/100) + "%")
-print("=========================")
-print(pw1)
-if(False): #only if testing words
-    numvw = 0
-    for word in dict:
-        word2 = word + "e"
-        check1 = word2 in dict
-        check2 = check_if_word(word2, True)
-        if(check1 and (not check2)):
-            print(word)
-        elif((not check1) and check2):
-            print(word)
-        numvw+=1
-        if(numvw%1000==0):
-            print(numvw)
-    print("Word check done")
-if(not(pw1==pw2)):
-    print("ERROR: TRIE AND RADIX TREE UNEQUAL")
-    print(len(pw1))
-    print(len(pw2))
+import unittest
+import time
+import pyradix
+from tqdm import tqdm
+class testWordCheck(unittest.TestCase):
+    dict1 = pyradix.get_dict("C:/Users/steve/Desktop/wordgame_nongit/Dictionaries/english_large.txt")
+    wordlistF = ["ttufpaepnerignss", "ponmlkjihgfedcba", "ciolmhrfefednslo", "abcdefghijklmnop"]
+    with tqdm(total=2) as pbar:
+        pbar.set_description("Loading test trees")
+        nonradix = pyradix.words_to_tree(dict1)
+        pbar.update(1)
+        radix = pyradix.words_to_tree(dict1)
+        pyradix.optimize_tree(radix)
+        pbar.update(2)
+        pbar.close()
+    def test_testvalidity(self):
+        self.assertGreater(len(self.dict1), 10000)
+    def test_nonradix_word_equality(self):
+        with tqdm(total=(len(self.dict1))) as pbar:
+            pbar.set_description("Testing non-radix validity")
+            for word in self.dict1:
+                if(word==""):
+                    continue
+                val = pyradix.check_if_word(self.nonradix, word, False)
+                self.assertTrue(val)
+                pbar.update(1)
+            pbar.close()
+    def test_radix_word_equality(self):
+        with tqdm(total=(len(self.dict1))) as pbar:
+            pbar.set_description("Testing radix validity")
+            for word in self.dict1:
+                if(word==""):
+                    continue
+                val = pyradix.check_if_word(self.radix, word, True)
+                self.assertTrue(val)
+                pbar.update(1)
+            pbar.close()
+    def test_result_equality(self):
+        with tqdm(total=len(self.wordlistF)) as pbar:
+            pbar.set_description("Testing non-radix and radix equality")
+            for wordlist in self.wordlistF:
+                pw1 = pyradix.wordPathfinding(False, self.nonradix, wordlist)
+                pw2 = pyradix.wordPathfinding(False, self.radix, wordlist)
+                self.assertEqual(pw1, pw2)
+                pbar.update(1)
+            pbar.close()
+    def test_trie_size(self):
+        with tqdm(total=2) as pbar:
+            pbar.set_description("Validating non-radix and radix size")
+            size = pyradix.count_nodes(self.nonradix)
+            pbar.update(1)
+            size2 = pyradix.count_nodes(self.radix)
+            pbar.update(1)
+            self.assertEqual(size, 1027814)
+            self.assertEqual(size2, 478056)
+            pbar.close()
+            
+if __name__ == '__main__':
+    unittest.main()

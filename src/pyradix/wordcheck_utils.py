@@ -1,6 +1,8 @@
-import tree_utils as tu
-import radix_utils as ru
+import pyradix.tree_utils as tu
+import pyradix.radix_utils as ru
 def check_if_word(node, word, radix):
+    if(word==""):
+        return True
     return check_if_word_sub(word, node, 1, radix)
 
 def check_if_word_sub(word, node, letters, radix): #actually not used in new version, but useful regardless
