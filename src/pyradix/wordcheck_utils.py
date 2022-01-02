@@ -1,6 +1,8 @@
 import pyradix.tree_utils as tu
 import pyradix.radix_utils as ru
-def check_if_word(node, word, radix):
+# if non-radix and radix=false, slightly more efficient than radix=true
+# if radix and radix=false, will break
+def check_if_word(node, word, radix=True):
     if(word==""):
         return True
     return check_if_word_sub(word, node, 1, radix)

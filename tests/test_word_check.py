@@ -6,7 +6,7 @@ class testWordCheck(unittest.TestCase):
     dict1 = pyradix.get_dict("C:/Users/steve/Desktop/wordgame_nongit/Dictionaries/english_large.txt")
     wordlistF = ["ttufpaepnerignss", "ponmlkjihgfedcba", "ciolmhrfefednslo", "abcdefghijklmnop"]
     with tqdm(total=2) as pbar:
-        pbar.set_description("Loading test trees")
+        pbar.set_description("Generating test trees")
         nonradix = pyradix.words_to_tree(dict1)
         pbar.update(1)
         radix = pyradix.words_to_tree(dict1)
