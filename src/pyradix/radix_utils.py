@@ -14,7 +14,7 @@ def optimize_tree(tree):
     else:
         return tree
 
-def find_index_radix(subnodes, word, endIdx):
+def find_index(subnodes, word, endIdx): #works for both radix and non-radix
     num = 0
     for node in subnodes:
         extra = min(len(word), endIdx+len(node.type)-1)

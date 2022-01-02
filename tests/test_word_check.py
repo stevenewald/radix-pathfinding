@@ -5,13 +5,14 @@ from tqdm import tqdm
 class testWordCheck(unittest.TestCase):
     dict1 = pyradix.get_dict("C:/Users/steve/Desktop/wordgame_nongit/Dictionaries/english_large.txt")
     wordlistF = ["ttufpaepnerignss", "ponmlkjihgfedcba", "ciolmhrfefednslo", "abcdefghijklmnop"]
-    with tqdm(total=2) as pbar:
+    with tqdm(total=3) as pbar:
         pbar.set_description("Generating test trees")
         nonradix = pyradix.words_to_tree(dict1)
         pbar.update(1)
         radix = pyradix.words_to_tree(dict1)
+        pbar.update(1)
         pyradix.optimize_tree(radix)
-        pbar.update(2)
+        pbar.update(1)
         pbar.close()
     def test_testvalidity(self):
         self.assertGreater(len(self.dict1), 10000)
@@ -21,7 +22,7 @@ class testWordCheck(unittest.TestCase):
             for word in self.dict1:
                 if(word==""):
                     continue
-                val = pyradix.check_if_word(self.nonradix, word, False)
+                val = pyradix.check_if_word(self.nonradix, word)
                 self.assertTrue(val)
                 pbar.update(1)
             pbar.close()
@@ -31,7 +32,7 @@ class testWordCheck(unittest.TestCase):
             for word in self.dict1:
                 if(word==""):
                     continue
-                val = pyradix.check_if_word(self.radix, word, True)
+                val = pyradix.check_if_word(self.radix, word)
                 self.assertTrue(val)
                 pbar.update(1)
             pbar.close()
