@@ -40,8 +40,8 @@ class testWordCheck(unittest.TestCase):
         with tqdm(total=len(self.wordlistF)) as pbar:
             pbar.set_description("Testing non-radix and radix equality")
             for wordlist in self.wordlistF:
-                pw1 = pyradix.wordPathfinding(False, self.nonradix, wordlist)
-                pw2 = pyradix.wordPathfinding(False, self.radix, wordlist)
+                pw1 = pyradix.wordPathfinding(self.nonradix, wordlist)
+                pw2 = pyradix.wordPathfinding(self.radix, wordlist)
                 self.assertEqual(pw1, pw2)
                 pbar.update(1)
             pbar.close()
